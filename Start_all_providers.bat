@@ -13,6 +13,18 @@ START "Thermometer" /B "cmd /c javaw -jar thermometer-provider-%version%.jar > s
 echo Thermometer started
 timeout /t %time_to_sleep% /nobreak > NUL
 
+cd ..\..
+cd .\detectorone-provider\target
+START "DetectorOne" /B "cmd /c javaw -jar detectorone-provider-%version%.jar > sout_pv2.log 2>&1"
+echo Detector One started
+timeout /t %time_to_sleep% /nobreak > NUL
+
+cd ..\..
+cd .\detectortwo-provider\target
+START "DetectorTwo" /B "cmd /c javaw -jar detectortwo-provider-%version%.jar > sout_pv3.log 2>&1"
+echo Detector Two started
+timeout /t %time_to_sleep% /nobreak > NUL
+
 cd %parent_path%
 
 ::Kill self

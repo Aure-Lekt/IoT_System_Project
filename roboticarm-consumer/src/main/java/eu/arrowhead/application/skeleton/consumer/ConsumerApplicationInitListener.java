@@ -10,8 +10,6 @@ import ai.aitia.arrowhead.application.library.ArrowheadService;
 import ai.aitia.arrowhead.application.library.config.ApplicationInitListener;
 import eu.arrowhead.common.core.CoreSystem;
 
-import lekt.factoryLineCommon.LineCommonConstants;
-
 @Component
 public class ConsumerApplicationInitListener extends ApplicationInitListener {
 
@@ -45,5 +43,6 @@ public class ConsumerApplicationInitListener extends ApplicationInitListener {
 	@Override
 	public void customDestroy() {
 		//TODO: implement here any custom behavior on application shutdown
+		System.out.println("End of the world ! Or something like that idk.");
 	}
 }

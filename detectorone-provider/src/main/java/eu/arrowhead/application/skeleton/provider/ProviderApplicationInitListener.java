@@ -22,7 +22,6 @@ import org.springframework.stereotype.Component;
 import ai.aitia.arrowhead.application.library.ArrowheadService;
 import ai.aitia.arrowhead.application.library.config.ApplicationInitListener;
 import ai.aitia.arrowhead.application.library.util.ApplicationCommonConstants;
-
 import eu.arrowhead.application.skeleton.provider.security.ProviderSecurityConfig;
 import eu.arrowhead.common.CommonConstants;
 import eu.arrowhead.common.Utilities;
@@ -69,50 +68,38 @@ public class ProviderApplicationInitListener extends ApplicationInitListener {
 	//-------------------------------------------------------------------------------------------------
 	@Override
 	protected void customInit(final ContextRefreshedEvent event) {
-		checkConfiguration();
-
 		//Checking the availability of necessary core systems
 		checkCoreSystemReachability(CoreSystem.SERVICEREGISTRY);
+		checkCoreSystemReachability(CoreSystem.ORCHESTRATOR);
 		if (sslEnabled && tokenSecurityFilterEnabled) {
-			checkCoreSystemReachability(CoreSystem.AUTHORIZATION);			
-
+			checkCoreSystemReachability(CoreSystem.AUTHORIZATION);
 			//Initialize Arrowhead Context
 			arrowheadService.updateCoreServiceURIs(CoreSystem.AUTHORIZATION);
-			
 			setTokenSecurityFilter();
 		} else {
 			logger.info("TokenSecurityFilter in not active");
-		}
+		}		
 		
+		//Initialize Arrowhead Context
+		//arrowheadService.updateCoreServiceURIs(CoreSystem.ORCHESTRATOR);
 		
 		//Register services into ServiceRegistry
-		ServiceRegistryRequestDTO getTempServiceRequest = createServiceRegistryRequest(LineCommonConstants.GET_TEMP_SERVICE_DEFINITION,  LineCommonConstants.TEMP_URI, HttpMethod.GET);
-		getTempServiceRequest.getMetadata().put(LineCommonConstants.REQUEST_PARAM_KEY_TIME, LineCommonConstants.REQUEST_PARAM_TIME);
-		getTempServiceRequest.getMetadata().put(LineCommonConstants.REQUEST_PARAM_KEY_VALUE, LineCommonConstants.REQUEST_PARAM_VALUE);
-		arrowheadService.forceRegisterServiceToServiceRegistry(getTempServiceRequest);
+		final ServiceRegistryRequestDTO getDetectorService = createServiceRegistryRequest(LineCommonConstants.GET_DETONE_SERVICE_DEFINITION,LineCommonConstants.DETONE_URI, HttpMethod.GET);
+		arrowheadService.forceRegisterServiceToServiceRegistry(getDetectorService);
 		
-		ServiceRegistryRequestDTO forceTempServiceRequest = createServiceRegistryRequest(LineCommonConstants.FORCE_TEMP_SERVICE_DEFINITION,  LineCommonConstants.TEMP_URI, HttpMethod.POST);		
-		arrowheadService.forceRegisterServiceToServiceRegistry(forceTempServiceRequest);
+		logger.info("Service registered ! ");
 	}
 	
 	//-------------------------------------------------------------------------------------------------
 	@Override
 	public void customDestroy() {
 		//Unregister service
-		arrowheadService.unregisterServiceFromServiceRegistry(LineCommonConstants.FORCE_TEMP_SERVICE_DEFINITION, LineCommonConstants.TEMP_URI);
-		arrowheadService.unregisterServiceFromServiceRegistry(LineCommonConstants.GET_TEMP_SERVICE_DEFINITION, LineCommonConstants.TEMP_URI);
+		arrowheadService.unregisterServiceFromServiceRegistry(LineCommonConstants.GET_DETONE_SERVICE_DEFINITION,LineCommonConstants.DETONE_URI);
+		logger.info("Service unregistered !");
 	}
 	
 	//=================================================================================================
 	// assistant methods
-	
-	//-------------------------------------------------------------------------------------------------
-	private void checkConfiguration() {
-		if (!sslEnabled && tokenSecurityFilterEnabled) {			 
-			logger.warn("Contradictory configuration:");
-			logger.warn("token.security.filter.enabled=true while server.ssl.enabled=false");
-		}
-	}
 
 	//-------------------------------------------------------------------------------------------------
 	private void setTokenSecurityFilter() {
@@ -132,6 +119,7 @@ public class ProviderApplicationInitListener extends ApplicationInitListener {
 		
 		providerSecurityConfig.getTokenSecurityFilter().setAuthorizationPublicKey(authorizationPublicKey);
 		providerSecurityConfig.getTokenSecurityFilter().setMyPrivateKey(providerPrivateKey);
+
 	}
 	
 	//-------------------------------------------------------------------------------------------------
@@ -143,7 +131,7 @@ public class ProviderApplicationInitListener extends ApplicationInitListener {
 		systemRequest.setAddress(mySystemAddress);
 		systemRequest.setPort(mySystemPort);		
 
-		if (sslEnabled && tokenSecurityFilterEnabled) {
+		if (tokenSecurityFilterEnabled) {
 			systemRequest.setAuthenticationInfo(Base64.getEncoder().encodeToString(arrowheadService.getMyPublicKey().getEncoded()));
 			serviceRegistryRequest.setSecure(ServiceSecurityType.TOKEN.name());
 			serviceRegistryRequest.setInterfaces(List.of(LineCommonConstants.INTERFACE_SECURE));
@@ -159,6 +147,7 @@ public class ProviderApplicationInitListener extends ApplicationInitListener {
 		serviceRegistryRequest.setServiceUri(serviceUri);
 		serviceRegistryRequest.setMetadata(new HashMap<>());
 		serviceRegistryRequest.getMetadata().put(LineCommonConstants.HTTP_METHOD, httpMethod.name());
+		
 		return serviceRegistryRequest;
 	}
 }

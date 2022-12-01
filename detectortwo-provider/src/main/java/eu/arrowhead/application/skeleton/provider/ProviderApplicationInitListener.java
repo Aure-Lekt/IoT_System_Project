@@ -22,7 +22,6 @@ import org.springframework.stereotype.Component;
 import ai.aitia.arrowhead.application.library.ArrowheadService;
 import ai.aitia.arrowhead.application.library.config.ApplicationInitListener;
 import ai.aitia.arrowhead.application.library.util.ApplicationCommonConstants;
-
 import eu.arrowhead.application.skeleton.provider.security.ProviderSecurityConfig;
 import eu.arrowhead.common.CommonConstants;
 import eu.arrowhead.common.Utilities;
@@ -31,7 +30,8 @@ import eu.arrowhead.common.dto.shared.ServiceRegistryRequestDTO;
 import eu.arrowhead.common.dto.shared.ServiceSecurityType;
 import eu.arrowhead.common.dto.shared.SystemRequestDTO;
 import eu.arrowhead.common.exception.ArrowheadException;
-import lekt.detectortwo_provider.DetectorTwoProviderConstants;
+
+import lekt.factoryLineCommon.LineCommonConstants;
 
 @Component
 public class ProviderApplicationInitListener extends ApplicationInitListener {
@@ -68,31 +68,34 @@ public class ProviderApplicationInitListener extends ApplicationInitListener {
 	//-------------------------------------------------------------------------------------------------
 	@Override
 	protected void customInit(final ContextRefreshedEvent event) {
-		checkConfiguration();
-		
 		//Checking the availability of necessary core systems
 		checkCoreSystemReachability(CoreSystem.SERVICEREGISTRY);
+		checkCoreSystemReachability(CoreSystem.ORCHESTRATOR);
 		if (sslEnabled && tokenSecurityFilterEnabled) {
-			checkCoreSystemReachability(CoreSystem.AUTHORIZATION);			
-
+			checkCoreSystemReachability(CoreSystem.AUTHORIZATION);
 			//Initialize Arrowhead Context
 			arrowheadService.updateCoreServiceURIs(CoreSystem.AUTHORIZATION);
-			
 			setTokenSecurityFilter();
 		} else {
 			logger.info("TokenSecurityFilter in not active");
 		}		
 		
+		//Initialize Arrowhead Context
+		//arrowheadService.updateCoreServiceURIs(CoreSystem.ORCHESTRATOR);
+		
 		//Register services into ServiceRegistry
-		ServiceRegistryRequestDTO getDetecServiceRequest = createServiceRegistryRequest(DetectorTwoProviderConstants.GET_DETEC_SERVICE_DEFINITION,  DetectorTwoProviderConstants.DETEC_URI, HttpMethod.GET);
-		arrowheadService.forceRegisterServiceToServiceRegistry(getDetecServiceRequest);
+		final ServiceRegistryRequestDTO getDetectorService = createServiceRegistryRequest(LineCommonConstants.GET_DETTWO_SERVICE_DEFINITION,LineCommonConstants.DETTWO_URI, HttpMethod.GET);
+		arrowheadService.forceRegisterServiceToServiceRegistry(getDetectorService);
+		
+		logger.info("Service registered ! ");
 	}
 	
 	//-------------------------------------------------------------------------------------------------
 	@Override
 	public void customDestroy() {
 		//Unregister service
-		arrowheadService.unregisterServiceFromServiceRegistry(DetectorTwoProviderConstants.GET_DETEC_SERVICE_DEFINITION, DetectorTwoProviderConstants.DETEC_URI);
+		arrowheadService.unregisterServiceFromServiceRegistry(LineCommonConstants.GET_DETTWO_SERVICE_DEFINITION,LineCommonConstants.DETTWO_URI);
+		logger.info("Service unregistered !");
 	}
 	
 	//=================================================================================================
@@ -138,19 +141,19 @@ public class ProviderApplicationInitListener extends ApplicationInitListener {
 		if (sslEnabled && tokenSecurityFilterEnabled) {
 			systemRequest.setAuthenticationInfo(Base64.getEncoder().encodeToString(arrowheadService.getMyPublicKey().getEncoded()));
 			serviceRegistryRequest.setSecure(ServiceSecurityType.TOKEN.name());
-			serviceRegistryRequest.setInterfaces(List.of(DetectorTwoProviderConstants.INTERFACE_SECURE));
+			serviceRegistryRequest.setInterfaces(List.of(LineCommonConstants.INTERFACE_SECURE));
 		} else if (sslEnabled) {
 			systemRequest.setAuthenticationInfo(Base64.getEncoder().encodeToString(arrowheadService.getMyPublicKey().getEncoded()));
 			serviceRegistryRequest.setSecure(ServiceSecurityType.CERTIFICATE.name());
-			serviceRegistryRequest.setInterfaces(List.of(DetectorTwoProviderConstants.INTERFACE_SECURE));
+			serviceRegistryRequest.setInterfaces(List.of(LineCommonConstants.INTERFACE_SECURE));
 		} else {
 			serviceRegistryRequest.setSecure(ServiceSecurityType.NOT_SECURE.name());
-			serviceRegistryRequest.setInterfaces(List.of(DetectorTwoProviderConstants.INTERFACE_INSECURE));
+			serviceRegistryRequest.setInterfaces(List.of(LineCommonConstants.INTERFACE_INSECURE));
 		}
 		serviceRegistryRequest.setProviderSystem(systemRequest);
 		serviceRegistryRequest.setServiceUri(serviceUri);
 		serviceRegistryRequest.setMetadata(new HashMap<>());
-		serviceRegistryRequest.getMetadata().put(DetectorTwoProviderConstants.HTTP_METHOD, httpMethod.name());
+		serviceRegistryRequest.getMetadata().put(LineCommonConstants.HTTP_METHOD, httpMethod.name());
 		return serviceRegistryRequest;
 	}
 }

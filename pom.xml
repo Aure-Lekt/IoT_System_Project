@@ -18,5 +18,7 @@
 	    <module>heatingsystem-consumer</module>
 	    <module>detectorone-provider</module>
 	    <module>detectortwo-provider</module>
+	    <module>roboticarm-consumer</module>
 	</modules>
+	
 </project>
