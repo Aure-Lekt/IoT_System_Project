@@ -1,17 +1,23 @@
 # IoT_System_Project
-IoT System Project 2022
+##### IoT System Project 2022 - V1.1
 
-V1.0
 
-Based on  :   arrowhead-f /sos-examples-spring
+## Base ressources
+Based on  :    arrowhead-f /sos-examples-spring
                arrowhead-f/client-skeleton-java-spring 
-
-Currently working : - Common
-                    - Thermometer
-                    - Heater
+## Progress
+### Currently working
+- Common
+- Thermometer
+- Heater
+- Detector 1 and 2
+- Robot Arm
   
- WIP : - detector 1
-       - detector 2
+ ### WIP
+- Upgrade the system to use EventHandler
 
-Future : - Robot Arm
-         - Tray
+### To do  
+- Tray
+
+## The Local Cloud Architecture 
+To add !
