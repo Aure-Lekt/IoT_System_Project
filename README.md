@@ -3,7 +3,7 @@
 
 
 ## Base ressources
-Based on  :    arrowhead-f /sos-examples-spring
+Based on  :    arrowhead-f /sos-examples-spring \n
                arrowhead-f/client-skeleton-java-spring 
 ## Progress
 ### Currently working
