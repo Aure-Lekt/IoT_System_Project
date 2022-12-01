@@ -2,9 +2,10 @@
 ##### IoT System Project 2022 - V1.1
 
 
-## Base ressources
-Based on  :    arrowhead-f /sos-examples-spring \n
-               arrowhead-f/client-skeleton-java-spring 
+## Base ressources 
+arrowhead-f /sos-examples-spring
+arrowhead-f/client-skeleton-java-spring 
+
 ## Progress
 ### Currently working
 - Common
