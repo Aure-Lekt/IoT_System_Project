@@ -3,6 +3,7 @@ package lekt.detectortwoprovider.controller;
 import java.io.IOException;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,11 +25,15 @@ import lekt.factoryLineCommon.dto.SensorDTO;
 @RequestMapping(LineCommonConstants.DETTWO_URI)
 public class DetectorTwoServiceController {
 	
+		// Parameters
+		@Value("${	custom.range:100}") 
+		private int RANGE;
+		
+		@Value("${custom.treshold:10}") 
+		private int TRESH;
+	
 		//=================================================================================================
 		// methods
-		private final int RANGE = 100;
-		private final int TRESH = 20;
-		
 		//-------------------------------------------------------------------------------------------------
 		@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
 		@ResponseBody public SensorDTO getDetTwo() {

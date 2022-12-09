@@ -8,7 +8,7 @@
   	</parent>
 	
 	<artifactId>thermometer-provider</artifactId>
-	<name>Arrowhead Thermometer</name>
+	<name>Arrowhead Thermometer Provider</name>
 	
 	<dependencies>
 		<dependency>

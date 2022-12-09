@@ -15,10 +15,11 @@
 	<modules>
 	    <module>factoryLine-common</module>
 	    <module>thermometer-provider</module>
-	    <module>heatingsystem-consumer</module>
 	    <module>detectorone-provider</module>
 	    <module>detectortwo-provider</module>
+	    <module>tray-provider</module>
 	    <module>roboticarm-consumer</module>
+	    <module>heatingsystem-consumer</module>
 	</modules>
 	
 </project>

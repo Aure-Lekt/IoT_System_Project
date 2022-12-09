@@ -9,11 +9,13 @@ import java.text.SimpleDateFormat;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.http.HttpMethod;
 
 import ai.aitia.arrowhead.application.library.ArrowheadService;
@@ -35,6 +37,7 @@ import lekt.factoryLineCommon.LineCommonConstants;
 
 @SpringBootApplication
 @ComponentScan(basePackages = {CommonConstants.BASE_PACKAGE, LineCommonConstants.TEMPLATE_BASE_PACKAGE, LineCommonConstants.CUSTOM_BASE_PACKAGE})
+@PropertySource("classpath:application.properties")
 public class TemperatureConsumerMain implements ApplicationRunner {
     
     //=================================================================================================
@@ -48,11 +51,20 @@ public class TemperatureConsumerMain implements ApplicationRunner {
     
     private final Logger logger = LogManager.getLogger(TemperatureConsumerMain.class);
     
+    // custom variables
+    @Value("${custom.maxloop:10}") 
+    private int MaxLoop;
+    
+    @Value("${custom.waittime:15}") 
+    private long WaitTime; //in seconds
+    
     private final DateFormat df = new SimpleDateFormat("dd/MMM/yy - HH:mm:ss");
+    
+    @Value("${custom.usejoke}") 
+    private boolean UseJoke; //in seconds
+    
     private final double UselessTemp = 1001.5;
     private final long UselessTime = Long.parseLong("1000210440000"); // dark humour warning !
-    private final int MaxLoop = 100;
-    private final long WaitTime = 15; //in seconds
     
     //=================================================================================================
 	// methods
@@ -65,23 +77,34 @@ public class TemperatureConsumerMain implements ApplicationRunner {
     //-------------------------------------------------------------------------------------------------
     @Override
 	public void run(final ApplicationArguments args) throws Exception {
-    	int i = 0;
+    	System.out.println("\n Check : MaxLoop = "+MaxLoop+" / WaitTime = "+WaitTime+" / Joke = "+UseJoke+"\n");
+    	
+    	int i = 0; //exit condition
+    	boolean ok = true; //exit condition
     	long time = System.currentTimeMillis();
     	
-    	forceTempServiceOrchestrationAndConsumption();
-    	System.out.println("\n Now it's time to get real ! \n");
+    	if(UseJoke) {
+	    	ok = forceTempServiceOrchestrationAndConsumption();
+	    	System.out.println("\n Now it's time to get real ! \n");
+    	}
     	
-    	while(i<MaxLoop) {
+    	while((i<MaxLoop)&&(ok)) {
     		if ((System.currentTimeMillis()-time)>=(WaitTime*1000)) {
-    			getTempServiceOrchestrationAndConsumption();
+    			ok = getTempServiceOrchestrationAndConsumption();
     			time=System.currentTimeMillis();
     			i++;
     		}
     	}
+    	
+    	if(i>=MaxLoop) {
+    		System.out.println("\n System stopped naturally \n");
+    	} else {
+    		System.out.println("\n System stopped due to lack of reponse from the provider/cloud \n");
+    	}
 	}
     
     //-------------------------------------------------------------------------------------------------
-    public void getTempServiceOrchestrationAndConsumption() {
+    public boolean getTempServiceOrchestrationAndConsumption() {
     	logger.info("Orchestration request for " + LineCommonConstants.GET_TEMP_SERVICE_DEFINITION + " service:");
     	final ServiceQueryFormDTO serviceQueryForm = new ServiceQueryFormDTO.Builder(LineCommonConstants.GET_TEMP_SERVICE_DEFINITION)
     																		.interfaces(getInterface())
@@ -102,8 +125,10 @@ public class TemperatureConsumerMain implements ApplicationRunner {
 		
 		if (orchestrationResponse == null) {
 			logger.info("No orchestration response received");
+			return false;
 		} else if (orchestrationResponse.getResponse().isEmpty()) {
 			logger.info("No provider found during the orchestration");
+			return false;
 		} else {
 			final OrchestrationResultDTO orchestrationResult = orchestrationResponse.getResponse().get(0);
 			validateOrchestrationResult(orchestrationResult, LineCommonConstants.GET_TEMP_SERVICE_DEFINITION);
@@ -115,11 +140,12 @@ public class TemperatureConsumerMain implements ApplicationRunner {
 																					orchestrationResult.getProvider().getAddress(), orchestrationResult.getProvider().getPort(), orchestrationResult.getServiceUri(),
 																					getInterface(), token, null, new String[0]);
 			printOut2(Temp);
+			return true;
 		}
     }
     
     //-------------------------------------------------------------------------------------------------
-    public void forceTempServiceOrchestrationAndConsumption() {
+    public boolean forceTempServiceOrchestrationAndConsumption() {
     	logger.info("Orchestration request for " + LineCommonConstants.FORCE_TEMP_SERVICE_DEFINITION + " service:");
     	final ServiceQueryFormDTO serviceQueryForm = new ServiceQueryFormDTO.Builder(LineCommonConstants.FORCE_TEMP_SERVICE_DEFINITION)
     																		.interfaces(getInterface())
@@ -136,8 +162,10 @@ public class TemperatureConsumerMain implements ApplicationRunner {
 		
 		if (orchestrationResponse == null) {
 			logger.info("No orchestration response received");
+			return false;
 		} else if (orchestrationResponse.getResponse().isEmpty()) {
 			logger.info("No provider found during the orchestration");
+			return false;
 		} else {
 			final OrchestrationResultDTO orchestrationResult = orchestrationResponse.getResponse().get(0);
 			validateOrchestrationResult(orchestrationResult, LineCommonConstants.FORCE_TEMP_SERVICE_DEFINITION);
@@ -153,6 +181,7 @@ public class TemperatureConsumerMain implements ApplicationRunner {
 					getInterface(), token, forcedTemp, new String[0]);
 			logger.info("Provider response : ");
 			printOut2(tempCreated);
+			return true;
 			}			
     }
     

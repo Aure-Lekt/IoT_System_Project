@@ -1,6 +1,8 @@
 package lekt.detectoroneprovider.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,12 +24,19 @@ import lekt.factoryLineCommon.dto.SensorDTO;
 
 @RestController
 @RequestMapping(LineCommonConstants.DETONE_URI)
+@PropertySource("classpath:application.properties")
 public class DetectorOneServiceController {
+	
+	// Parameters
+	@Value("${	custom.range:100}") 
+	private int RANGE;
+	
+	@Value("${custom.treshold:10}") 
+	private int TRESH;
+
 	
 	//=================================================================================================
 	// methods
-	private final int RANGE = 100;
-	private final int TRESH = 10;
 	
 	//-------------------------------------------------------------------------------------------------
 	@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)

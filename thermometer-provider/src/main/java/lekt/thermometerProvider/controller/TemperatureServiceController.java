@@ -1,9 +1,7 @@
 package lekt.thermometerProvider.controller;
 
-//import java.util.ArrayList;
-//import java.util.List;
-
-//import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,14 +25,20 @@ import lekt.factoryLineCommon.LineCommonConstants;
 
 @RestController
 @RequestMapping(LineCommonConstants.TEMP_URI)
+@PropertySource("classpath:application.properties")
 public class TemperatureServiceController {
 	
 	//=================================================================================================
 	// members	
 	
-	private double Mean = 60.0;
-	private double Variation = 3.0;
-	private long Period = 180;
+	@Value("${some.mean:50.0}")
+	private double Mean;
+	
+	@Value("${some.var:3.0}")
+	private double Variation;
+	
+	@Value("${some.period:60}")
+	private long Period;
 
 	//=================================================================================================
 	// methods
