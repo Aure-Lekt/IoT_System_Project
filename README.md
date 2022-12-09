@@ -13,12 +13,10 @@
 - Heater
 - Detector 1 and 2
 - Robot Arm
-  
- ### WIP
-- Upgrade the system to use EventHandler
-
-### To do  
 - Tray
+
+### To do (Maybe)
+- Upgrade the system to use EventHandler
 
 ## The Local Cloud Architecture 
 To add !
