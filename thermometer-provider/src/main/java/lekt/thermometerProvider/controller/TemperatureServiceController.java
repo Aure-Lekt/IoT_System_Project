@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import lekt.factoryLineCommon.dto.TemperatureRequestDTO;
 import lekt.factoryLineCommon.dto.TemperatureResponseDTO;
-import lekt.thermometerProvider.database.DTOConverter;
+import lekt.thermometerProvider.convertor.DTOConverter;
 import lekt.thermometerProvider.entity.TempLog;
 
 import lekt.factoryLineCommon.LineCommonConstants;

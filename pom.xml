@@ -9,7 +9,7 @@
 	</parent>
 	
 	<artifactId>FactoryLine</artifactId>
-	<version>1.0</version>
+	<version>1.3</version>
 	<packaging>pom</packaging>
 	
 	<modules>
@@ -17,8 +17,8 @@
 	    <module>thermometer-provider</module>
 	    <module>detectorone-provider</module>
 	    <module>detectortwo-provider</module>
-	    <module>tray-provider</module>
-	    <module>roboticarm-consumer</module>
+	    <module>roboticarm-provider</module>
+	    <module>tray-consumer</module>
 	    <module>heatingsystem-consumer</module>
 	</modules>
 	

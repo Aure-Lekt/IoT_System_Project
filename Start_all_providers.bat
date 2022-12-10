@@ -25,6 +25,12 @@ START "DetectorTwo" /B "cmd /c javaw -jar detectortwo-provider-%version%.jar > s
 echo Detector Two started
 timeout /t %time_to_sleep% /nobreak > NUL
 
+cd ..\..
+cd .\roboticarm-provider\target
+START "DetectorTwo" /B "cmd /c javaw -jar roboticarm-provider-%version%.jar > sout_pv4.log 2>&1"
+echo Robotic Arm started
+timeout /t %time_to_sleep% /nobreak > NUL
+
 cd %parent_path%
 
 ::Kill self

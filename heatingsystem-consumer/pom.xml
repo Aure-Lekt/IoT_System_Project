@@ -4,7 +4,7 @@
 	<parent>
     	<groupId>eu.arrowhead</groupId>
     	<artifactId>FactoryLine</artifactId>
-    	<version>1.0</version>
+    	<version>1.3</version>
   	</parent>
 	
 	<artifactId>heatingsystem-consumer</artifactId>

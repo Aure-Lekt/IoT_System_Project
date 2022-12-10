@@ -83,8 +83,7 @@ public class ProviderApplicationInitListener extends ApplicationInitListener {
 		} else {
 			logger.info("TokenSecurityFilter in not active");
 		}
-		
-		
+
 		//Register services into ServiceRegistry
 		ServiceRegistryRequestDTO getTempServiceRequest = createServiceRegistryRequest(LineCommonConstants.GET_TEMP_SERVICE_DEFINITION,  LineCommonConstants.TEMP_URI, HttpMethod.GET);
 		getTempServiceRequest.getMetadata().put(LineCommonConstants.REQUEST_PARAM_KEY_TIME, LineCommonConstants.REQUEST_PARAM_TIME);

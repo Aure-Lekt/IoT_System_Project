@@ -1,6 +1,6 @@
 package lekt.factoryLineCommon.boolSequences;
 
-import lekt.factoryLineCommon.dto.SensorDTO;
+import lekt.factoryLineCommon.dto.SensorResponseDTO;
 
 public class sensorBoolSequence {
 
@@ -29,7 +29,7 @@ public class sensorBoolSequence {
 	public void setOccupation(final boolean occupation) { this.occupation = occupation; }	
 	
 	//-------------------------------------------------------------------------------------------------
-	public static sensorBoolSequence getFromSuccess(final SensorDTO dto) { // to use only for success reading !
+	public static sensorBoolSequence getFromSuccess(final SensorResponseDTO dto) { // to use only for success reading !
 		return new sensorBoolSequence(true,dto.getDet());
 	}
 	

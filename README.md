@@ -1,5 +1,5 @@
 # IoT_System_Project
-##### IoT System Project 2022 - V1.1
+##### IoT System Project 2022 - V1.3
 
 
 ## Base ressources 
@@ -7,6 +7,11 @@
 - arrowhead-f/client-skeleton-java-spring 
 
 ## Progress
+
+### Major Update 
+- Now the sytem work with 3 provider, 2 consumer and 1 taht do both.
+- Now the system work with a provider chain for the tray consumer.
+
 ### Currently working
 - Common
 - Thermometer

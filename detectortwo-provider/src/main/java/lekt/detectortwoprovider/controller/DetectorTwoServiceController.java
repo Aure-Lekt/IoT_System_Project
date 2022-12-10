@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import eu.arrowhead.common.exception.BadPayloadException;
 
 import lekt.factoryLineCommon.LineCommonConstants;
-import lekt.factoryLineCommon.dto.SensorDTO;
+import lekt.factoryLineCommon.dto.SensorResponseDTO;
 
 @RestController
 @RequestMapping(LineCommonConstants.DETTWO_URI)
@@ -36,12 +36,12 @@ public class DetectorTwoServiceController {
 		// methods
 		//-------------------------------------------------------------------------------------------------
 		@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-		@ResponseBody public SensorDTO getDetTwo() {
+		@ResponseBody public SensorResponseDTO getDetTwo() {
 			
 			int dice = (int)(Math.random()*RANGE); 
-			boolean resp = (dice>=TRESH);
+			boolean resp = !(dice>=TRESH);
 			
-			SensorDTO SR = new SensorDTO(resp);
+			SensorResponseDTO SR = new SensorResponseDTO(resp);
 			return SR;
 		}
 		
