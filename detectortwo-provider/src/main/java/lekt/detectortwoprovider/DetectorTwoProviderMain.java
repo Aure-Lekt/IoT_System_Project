@@ -19,4 +19,5 @@ public class DetectorTwoProviderMain {
 	public static void main(final String[] args) {
 		SpringApplication.run(DetectorTwoProviderMain.class, args);
 	}	
+	
 }

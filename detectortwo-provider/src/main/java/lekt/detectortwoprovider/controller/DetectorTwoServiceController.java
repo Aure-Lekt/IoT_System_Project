@@ -1,7 +1,5 @@
 package lekt.detectortwoprovider.controller;
 
-import java.io.IOException;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
@@ -26,7 +24,7 @@ import lekt.factoryLineCommon.dto.SensorResponseDTO;
 public class DetectorTwoServiceController {
 	
 		// Parameters
-		@Value("${	custom.range:100}") 
+		@Value("${custom.range:100}") 
 		private int RANGE;
 		
 		@Value("${custom.treshold:10}") 

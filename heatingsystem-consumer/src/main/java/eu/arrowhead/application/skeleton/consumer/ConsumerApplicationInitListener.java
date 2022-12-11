@@ -38,12 +38,14 @@ public class ConsumerApplicationInitListener extends ApplicationInitListener {
 		arrowheadService.updateCoreServiceURIs(CoreSystem.ORCHESTRATOR);
 
 		//TODO: implement here any custom behavior on application start up
-		
+		System.out.println("Init Done !");
 	}
 	
 	//-------------------------------------------------------------------------------------------------
 	@Override
 	public void customDestroy() {
 		//TODO: implement here any custom behavior on application shutdown
+		System.out.println("Shutting down consumer.");
+		
 	}
 }

@@ -1,7 +1,5 @@
 package lekt.heatingsystemConsumer;
 
-//import java.util.List;
-
 import java.util.Date;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -63,7 +61,7 @@ public class TemperatureConsumerMain implements ApplicationRunner {
     @Value("${custom.usejoke}") 
     private boolean UseJoke; //in seconds
     
-    private final double UselessTemp = 1001.5;
+    private final double UselessTemp = 1001.5; //Useless value, just to test the force_temp service
     private final long UselessTime = Long.parseLong("1000210440000"); // dark humour warning !
     
     //=================================================================================================
@@ -84,8 +82,12 @@ public class TemperatureConsumerMain implements ApplicationRunner {
     	long time = System.currentTimeMillis();
     	
     	if(UseJoke) {
-	    	ok = forceTempServiceOrchestrationAndConsumption();
-	    	System.out.println("\n Now it's time to get real ! \n");
+	    	ok = forceTempServiceOrchestrationAndConsumption(UselessTime,UselessTemp);
+	    	if (ok) {
+	    		System.out.println("\n Now it's time to get real ! \n");
+	    	} else {
+	    		System.out.println("\n Something already got wrong ! \n");
+	    	}
     	}
     	
     	while((i<MaxLoop)&&(ok)) {
@@ -139,13 +141,15 @@ public class TemperatureConsumerMain implements ApplicationRunner {
 			final TemperatureResponseDTO Temp = arrowheadService.consumeServiceHTTP(TemperatureResponseDTO.class, HttpMethod.valueOf(orchestrationResult.getMetadata().get(LineCommonConstants.HTTP_METHOD)),
 																					orchestrationResult.getProvider().getAddress(), orchestrationResult.getProvider().getPort(), orchestrationResult.getServiceUri(),
 																					getInterface(), token, null, new String[0]);
-			printOut2(Temp);
+			logger.info("Provider response : ");
+			printOutTemperature(Temp);
+			printOutTemperature(Temp);
 			return true;
 		}
     }
     
     //-------------------------------------------------------------------------------------------------
-    public boolean forceTempServiceOrchestrationAndConsumption() {
+    public boolean forceTempServiceOrchestrationAndConsumption(final long forcedTime,final double forcedValue) {
     	logger.info("Orchestration request for " + LineCommonConstants.FORCE_TEMP_SERVICE_DEFINITION + " service:");
     	final ServiceQueryFormDTO serviceQueryForm = new ServiceQueryFormDTO.Builder(LineCommonConstants.FORCE_TEMP_SERVICE_DEFINITION)
     																		.interfaces(getInterface())
@@ -170,17 +174,21 @@ public class TemperatureConsumerMain implements ApplicationRunner {
 			final OrchestrationResultDTO orchestrationResult = orchestrationResponse.getResponse().get(0);
 			validateOrchestrationResult(orchestrationResult, LineCommonConstants.FORCE_TEMP_SERVICE_DEFINITION);
 			
-			System.out.println("Temprature "+UselessTemp+" °C at timeStamp = "+UselessTime);
-			final TemperatureRequestDTO forcedTemp = new TemperatureRequestDTO(UselessTime,UselessTemp);
+			System.out.println("Temprature "+forcedValue+" °C at timeStamp = "+forcedTime);
+			final TemperatureRequestDTO forcedTemp = new TemperatureRequestDTO(forcedTime,forcedValue);
+			printOut(forcedTemp);
 			
-			logger.info("Sending redquest :");
+			logger.info("Sending forced temperature redquest :");
 			final String token = orchestrationResult.getAuthorizationTokens() == null ? null : orchestrationResult.getAuthorizationTokens().get(getInterface());
 			
 			final TemperatureResponseDTO tempCreated = arrowheadService.consumeServiceHTTP(TemperatureResponseDTO.class, HttpMethod.valueOf(orchestrationResult.getMetadata().get(LineCommonConstants.HTTP_METHOD)),
 					orchestrationResult.getProvider().getAddress(), orchestrationResult.getProvider().getPort(), orchestrationResult.getServiceUri(),
 					getInterface(), token, forcedTemp, new String[0]);
+			
 			logger.info("Provider response : ");
-			printOut2(tempCreated);
+			printOut(tempCreated);
+			printOutTemperature(tempCreated);
+			
 			return true;
 			}			
     }
@@ -216,7 +224,7 @@ public class TemperatureConsumerMain implements ApplicationRunner {
     	System.out.println(Utilities.toPrettyJson(Utilities.toJson(object)));
     }
     
-    private void printOut2(final TemperatureResponseDTO dto) {
+    private void printOutTemperature(final TemperatureResponseDTO dto) {
 		Date sampleDate = new Date(dto.getTime());
 		String dt = df.format(sampleDate);
 		String dv = String.format("%.2f",dto.getValue());

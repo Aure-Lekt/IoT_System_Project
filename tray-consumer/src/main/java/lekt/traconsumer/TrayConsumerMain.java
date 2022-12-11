@@ -112,7 +112,7 @@ public class TrayConsumerMain implements ApplicationRunner {
     					timeSave = System.currentTimeMillis();
     					loadMode = false;
     				} else { // > MaxLoad  should not happen
-    					System.out.println("something got wrong");
+    					System.out.println("Something got wrong");
     					forceExit = true;
     				}
     			} else {
@@ -121,7 +121,7 @@ public class TrayConsumerMain implements ApplicationRunner {
     					responseBuffer = postArmServiceOrchestrationAndConsumption(loadMode);
     					if ((responseBuffer.getArmReadOk())&&(responseBuffer.getSensorReadOk())) {
     						if(responseBuffer.getLoadUnloadSuccess()) {
-    							System.out.println("unloaded with success.");
+    							System.out.println("Unloaded with success.");
     							currentLoad--;
         						j=0;
         						i++;
@@ -137,8 +137,9 @@ public class TrayConsumerMain implements ApplicationRunner {
     				} else if (currentLoad==0){
     					System.out.println("The tray is empty.");
     					loadMode = true;
+    					timeSave = System.currentTimeMillis();
     				} else { // <0  should not happen
-    					System.out.println("something got wrong");
+    					System.out.println("Something got wrong");
     					forceExit = true;
     				}	
     			}
@@ -148,9 +149,9 @@ public class TrayConsumerMain implements ApplicationRunner {
     	if(i>=MaxLoad) {
     		System.out.println("Loop exited naturally.");
     	} else if (j>=MaxRetry) {
-    		System.out.println("Loop exited because of communation failure or load/unload failure.");
+    		System.out.println("Loop exited because of communication failure or load/unload failure.");
     	} else {
-    		System.out.println("Loop exited because of unknown error ");
+    		System.out.println("Loop exited because of an unknown error ");
     	}
     	
     	System.exit(0);
@@ -167,7 +168,7 @@ public class TrayConsumerMain implements ApplicationRunner {
     			i++;
     		}
     	}
-    	System.out.println("Porcess done !"); 	
+    	System.out.println("Process done !"); 	
     }
     
     
@@ -199,6 +200,7 @@ public class TrayConsumerMain implements ApplicationRunner {
 	
 			
 			final ArmRequestDTO armRequest = new ArmRequestDTO(loadMode);
+			printOut(armRequest);
 			
 			logger.info("Sending redquest :");
 			final String token = orchestrationResult.getAuthorizationTokens() == null ? null : orchestrationResult.getAuthorizationTokens().get(getInterface());

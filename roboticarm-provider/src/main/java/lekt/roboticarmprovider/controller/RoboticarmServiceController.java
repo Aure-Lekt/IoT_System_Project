@@ -1,6 +1,5 @@
 package lekt.roboticarmprovider.controller;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -31,7 +30,6 @@ public class RoboticarmServiceController {
 	@Autowired
 	private RoboticArmConsumer roboticArmConsumer;
 	
-
 	//=================================================================================================
 	// methods
 
@@ -47,11 +45,11 @@ public class RoboticarmServiceController {
 			sensorBoolSequence sensorResponse = roboticArmConsumer.getInSensor();
 			if (sensorResponse.getOk()) {
 				if (sensorResponse.getOccupation()) {
-					System.out.println("Piece founded on the input slot.");
+					System.out.println("Piece found on the input slot.");
 					System.out.println("Loading the piece into the tray.");
 					responseDto =  new ArmResponseDTO(true,true);
 				} else {
-					System.out.println("No Piece founded on the input slot.");
+					System.out.println("No Piece found on the input slot.");
 					System.out.println("Can't load.");	
 					responseDto = new ArmResponseDTO(true,false);
 				}
@@ -64,11 +62,11 @@ public class RoboticarmServiceController {
 			sensorBoolSequence sensorResponse = roboticArmConsumer.getOutSensor();	
 			if (sensorResponse.getOk()) {
 				if (!sensorResponse.getOccupation()) {
-					System.out.println("No Piece founded on the output slot.");
+					System.out.println("No Piece found on the output slot.");
 					System.out.println("UnLoading the piece into the tray.");
 					responseDto = new ArmResponseDTO(true,true);
 				} else {
-					System.out.println("Piece founded on the output slot.");
+					System.out.println("Piece found on the output slot.");
 					System.out.println("Can't unload.");	
 					responseDto = new ArmResponseDTO(true,false);
 				}

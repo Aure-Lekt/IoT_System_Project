@@ -28,7 +28,7 @@ import lekt.factoryLineCommon.dto.SensorResponseDTO;
 public class DetectorOneServiceController {
 	
 	// Parameters
-	@Value("${	custom.range:100}") 
+	@Value("${custom.range:100}") 
 	private int RANGE;
 	
 	@Value("${custom.treshold:10}") 

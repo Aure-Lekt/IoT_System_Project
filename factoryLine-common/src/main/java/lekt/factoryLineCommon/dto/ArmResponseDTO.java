@@ -13,7 +13,7 @@ public class ArmResponseDTO implements Serializable {
 	boolean loadingProcessStatus;
 	
 	//=================================================================================================
-	// methods
+	// methods 
 	
 	public ArmResponseDTO() {}
 

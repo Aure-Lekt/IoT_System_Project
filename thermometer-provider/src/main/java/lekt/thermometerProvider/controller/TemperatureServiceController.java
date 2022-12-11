@@ -16,12 +16,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import lekt.factoryLineCommon.dto.TemperatureRequestDTO;
 import lekt.factoryLineCommon.dto.TemperatureResponseDTO;
-import lekt.thermometerProvider.convertor.DTOConverter;
 import lekt.thermometerProvider.entity.TempLog;
 
 import lekt.factoryLineCommon.LineCommonConstants;
 
-//import eu.arrowhead.common.exception.BadPayloadException;
 
 @RestController
 @RequestMapping(LineCommonConstants.TEMP_URI)
@@ -49,14 +47,13 @@ public class TemperatureServiceController {
 													  @RequestParam(name = LineCommonConstants.REQUEST_PARAM_VALUE, required = false) final Double value) {
 		//completely ignore your input !
 		long timeStamp = System.currentTimeMillis();
-		long arg_angle = (timeStamp/1000)%Period; //position is a [period] sec cycle
+		long arg_angle = (timeStamp/1000)%Period; //position in a [period] sec cycle
         double angle = ((double)arg_angle/Period)*2*Math.PI;
         double tempValue = Mean + Variation*Math.sin(angle);
 
         TempLog TL = new TempLog(timeStamp,tempValue);
-		TemperatureResponseDTO res_TL = DTOConverter.convertToResponseDTO(TL);
-		
-		return res_TL;
+        
+        return new TemperatureResponseDTO(TL.getTime(), TL.getValue());
 	}
 	
 	//-------------------------------------------------------------------------------------------------

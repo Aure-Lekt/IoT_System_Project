@@ -43,49 +43,17 @@ public class RoboticArmConsumer {
 	
 	//-------------------------------------------------------------------------------------------------
 	public sensorBoolSequence getInSensor() {
-		logger.info("Orchestration request for " + LineCommonConstants.GET_DETONE_SERVICE_DEFINITION + " service:");
-    	final ServiceQueryFormDTO serviceQueryForm = new ServiceQueryFormDTO.Builder(LineCommonConstants.GET_DETONE_SERVICE_DEFINITION)
-    																		.interfaces(getInterface())
-    																		.build();
-    	
-		final Builder orchestrationFormBuilder = arrowheadService.getOrchestrationFormBuilder();
-		final OrchestrationFormRequestDTO orchestrationFormRequest = orchestrationFormBuilder.requestedService(serviceQueryForm)
-																					   .flag(Flag.MATCHMAKING, true)
-																					   .flag(Flag.OVERRIDE_STORE, true)
-																					   .build();
-		
-		printOut(orchestrationFormRequest);		
-	
-		final OrchestrationResponseDTO orchestrationResponse = arrowheadService.proceedOrchestration(orchestrationFormRequest);
-		
-		logger.info("Orchestration response:");
-		printOut(orchestrationResponse);		
-		
-		if (orchestrationResponse == null) {
-			logger.info("No orchestration response received");
-			return sensorBoolSequence.getFromFailure();
-		} else if (orchestrationResponse.getResponse().isEmpty()) {
-			logger.info("No provider found during the orchestration");
-			return sensorBoolSequence.getFromFailure();
-		} else {
-			final OrchestrationResultDTO orchestrationResult = orchestrationResponse.getResponse().get(0);
-			validateOrchestrationResult(orchestrationResult, LineCommonConstants.GET_DETONE_SERVICE_DEFINITION);
-			
-			logger.info("Dectector :");
-			final String token = orchestrationResult.getAuthorizationTokens() == null ? null : orchestrationResult.getAuthorizationTokens().get(getInterface());
-			@SuppressWarnings("unchecked")
-			final SensorResponseDTO sensorDto = arrowheadService.consumeServiceHTTP(SensorResponseDTO.class, HttpMethod.valueOf(orchestrationResult.getMetadata().get(LineCommonConstants.HTTP_METHOD)),
-																					orchestrationResult.getProvider().getAddress(), orchestrationResult.getProvider().getPort(), orchestrationResult.getServiceUri(),
-																					getInterface(), token, null, new String[0]);
-			printOut(sensorDto);
-			return sensorBoolSequence.getFromSuccess(sensorDto);
-		}
+		return getSensorOrchestrationAndConsumption(LineCommonConstants.GET_DETONE_SERVICE_DEFINITION);
 	}
 	
 	//-------------------------------------------------------------------------------------------------
 	public sensorBoolSequence getOutSensor() {	
-		logger.info("Orchestration request for " + LineCommonConstants.GET_DETTWO_SERVICE_DEFINITION + " service:");
-    	final ServiceQueryFormDTO serviceQueryForm = new ServiceQueryFormDTO.Builder(LineCommonConstants.GET_DETTWO_SERVICE_DEFINITION)
+		return getSensorOrchestrationAndConsumption(LineCommonConstants.GET_DETTWO_SERVICE_DEFINITION);
+	}
+	
+	private sensorBoolSequence getSensorOrchestrationAndConsumption(String serviceDef) {
+		logger.info("Orchestration request for " + serviceDef + " service:");
+    	final ServiceQueryFormDTO serviceQueryForm = new ServiceQueryFormDTO.Builder(serviceDef)
     																		.interfaces(getInterface())
     																		.build();
     	
@@ -110,14 +78,15 @@ public class RoboticArmConsumer {
 			return sensorBoolSequence.getFromFailure();
 		} else {
 			final OrchestrationResultDTO orchestrationResult = orchestrationResponse.getResponse().get(0);
-			validateOrchestrationResult(orchestrationResult, LineCommonConstants.GET_DETTWO_SERVICE_DEFINITION);
+			validateOrchestrationResult(orchestrationResult, serviceDef);
 			
-			logger.info("Get most recent temperature log :");
+			logger.info("Get sensor data :");
 			final String token = orchestrationResult.getAuthorizationTokens() == null ? null : orchestrationResult.getAuthorizationTokens().get(getInterface());
 			@SuppressWarnings("unchecked")
 			final SensorResponseDTO sensorDto = arrowheadService.consumeServiceHTTP(SensorResponseDTO.class, HttpMethod.valueOf(orchestrationResult.getMetadata().get(LineCommonConstants.HTTP_METHOD)),
 																					orchestrationResult.getProvider().getAddress(), orchestrationResult.getProvider().getPort(), orchestrationResult.getServiceUri(),
 																					getInterface(), token, null, new String[0]);
+			logger.info("Response : ");
 			printOut(sensorDto);
 			return sensorBoolSequence.getFromSuccess(sensorDto);
 		}
