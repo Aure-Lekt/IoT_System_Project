@@ -1,7 +1,10 @@
 package lekt.factoryLineCommon;
 
 public final class LineCommonConstants {
-
+	
+	//=================================================================================================
+	// members
+	
 	public static final String TEMPLATE_BASE_PACKAGE = "ai.aitia";
 	public static final String CUSTOM_BASE_PACKAGE = "lekt";
 
@@ -12,7 +15,7 @@ public final class LineCommonConstants {
 	public static final String DETONE_URI = "/detone";
 	public static final String DETTWO_URI = "/dettwo";
 	public static final String TEMP_URI = "/temperature";
-	public static final String TRAY_URI = "/tray";
+	//public static final String TRAY_URI = "/tray";
 	public static final String ARM_URI = "/robotarm";
 	
 	public static final String GET_DETONE_SERVICE_DEFINITION = "get-detone";

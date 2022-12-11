@@ -23,5 +23,6 @@ public class TempLog {
 
 	//-------------------------------------------------------------------------------------------------
 	public void setTime(final long time) { this.time = time; }
-	public void setValue(final double value) { this.value = value; }		
+	public void setValue(final double value) { this.value = value; }		 
+	
 }

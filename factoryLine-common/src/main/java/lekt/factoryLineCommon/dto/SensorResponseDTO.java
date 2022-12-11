@@ -4,25 +4,25 @@ import java.io.Serializable;
 
 public final class SensorResponseDTO extends Object implements Serializable {
 
-	private static final long serialVersionUID = -2338081986525711986L;
+	private static final long serialVersionUID = 7491010873642425359L;
 	
-	private boolean detect;
+	private boolean detection;
 
 	//=================================================================================================
 	// methods
 	
 	//-------------------------------------------------------------------------------------------------
-	public SensorResponseDTO() {}
+	public SensorResponseDTO() {} 
 	
 	//-------------------------------------------------------------------------------------------------
-	public SensorResponseDTO(final boolean detect) {
-		this.detect = detect;
+	public SensorResponseDTO(final boolean detection) {
+		this.detection = detection;
 	}
 
 	//-------------------------------------------------------------------------------------------------
-	public boolean getDet() { return this.detect; }
+	public boolean getDetection() { return this.detection; }
 	
 	//-------------------------------------------------------------------------------------------------
-	public void setDet(final boolean detect) { this.detect = detect; } 
+	public void setDetection(final boolean detection) { this.detection = detection; } 
 	
 }
