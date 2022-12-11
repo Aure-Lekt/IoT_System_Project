@@ -27,7 +27,7 @@ This is the "lower" version version (rated for grade of 3). It will be presented
 
 ## The Local Cloud Architecture
 
-![Alt text](https://github.com/Aure-Lekt/IoT_System_Project/documentation/LocalCloud_lower.png)
+![Alt text]((https://github.com/Aure-Lekt/IoT_System_Project/blob/main/documentation/LocalCloud_lower.png)
 
 
 
