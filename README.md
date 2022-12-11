@@ -3,10 +3,9 @@
 
 This is the "lower" version version (rated for grade of 3). It will be presented if I don't manage to do the "higher" version (rated for grade of 4).
 
-
 ## Base ressources
-- arrowhead-f /sos-examples-spring
-- arrowhead-f/client-skeleton-java-spring
+- [arrowhead-f/client-skeleton-java-spring](https://github.com/arrowhead-f/client-skeleton-java-spring)
+- [arrowhead-f /sos-examples-springk](https://github.com/arrowhead-f/sos-examples-spring)
 
 ## Progress
 
