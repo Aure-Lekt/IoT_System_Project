@@ -107,6 +107,7 @@ public class TemperatureConsumerMain implements ApplicationRunner {
     
     //-------------------------------------------------------------------------------------------------
     public boolean getTempServiceOrchestrationAndConsumption() {
+    	long timer = System.currentTimeMillis();
     	logger.info("Orchestration request for " + LineCommonConstants.GET_TEMP_SERVICE_DEFINITION + " service:");
     	final ServiceQueryFormDTO serviceQueryForm = new ServiceQueryFormDTO.Builder(LineCommonConstants.GET_TEMP_SERVICE_DEFINITION)
     																		.interfaces(getInterface())
@@ -141,8 +142,9 @@ public class TemperatureConsumerMain implements ApplicationRunner {
 			final TemperatureResponseDTO Temp = arrowheadService.consumeServiceHTTP(TemperatureResponseDTO.class, HttpMethod.valueOf(orchestrationResult.getMetadata().get(LineCommonConstants.HTTP_METHOD)),
 																					orchestrationResult.getProvider().getAddress(), orchestrationResult.getProvider().getPort(), orchestrationResult.getServiceUri(),
 																					getInterface(), token, null, new String[0]);
+			System.out.println("Time to send the data : "+(System.currentTimeMillis()-timer)+" ms");
 			logger.info("Provider response : ");
-			printOutTemperature(Temp);
+			printOut(Temp);
 			printOutTemperature(Temp);
 			return true;
 		}
@@ -150,6 +152,7 @@ public class TemperatureConsumerMain implements ApplicationRunner {
     
     //-------------------------------------------------------------------------------------------------
     public boolean forceTempServiceOrchestrationAndConsumption(final long forcedTime,final double forcedValue) {
+    	long timer = System.currentTimeMillis();
     	logger.info("Orchestration request for " + LineCommonConstants.FORCE_TEMP_SERVICE_DEFINITION + " service:");
     	final ServiceQueryFormDTO serviceQueryForm = new ServiceQueryFormDTO.Builder(LineCommonConstants.FORCE_TEMP_SERVICE_DEFINITION)
     																		.interfaces(getInterface())
@@ -185,6 +188,7 @@ public class TemperatureConsumerMain implements ApplicationRunner {
 					orchestrationResult.getProvider().getAddress(), orchestrationResult.getProvider().getPort(), orchestrationResult.getServiceUri(),
 					getInterface(), token, forcedTemp, new String[0]);
 			
+			System.out.println("Time to send and get the data : "+(System.currentTimeMillis()-timer)+" ms");
 			logger.info("Provider response : ");
 			printOut(tempCreated);
 			printOutTemperature(tempCreated);

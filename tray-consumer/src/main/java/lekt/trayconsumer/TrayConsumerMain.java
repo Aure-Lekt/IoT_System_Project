@@ -1,4 +1,4 @@
-package lekt.traconsumer;
+package lekt.trayconsumer;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -146,7 +146,7 @@ public class TrayConsumerMain implements ApplicationRunner {
     		}
     	}
     	
-    	if(i>=MaxLoad) {
+    	if(i>=MaxLoop) {
     		System.out.println("Loop exited naturally.");
     	} else if (j>=MaxRetry) {
     		System.out.println("Loop exited because of communication failure or load/unload failure.");
@@ -174,6 +174,7 @@ public class TrayConsumerMain implements ApplicationRunner {
     
     //-------------------------------------------------------------------------------------------------
     public armBoolSequence postArmServiceOrchestrationAndConsumption(boolean loadMode) {
+    	long timer = System.currentTimeMillis();
     	logger.info("Orchestration request for " + LineCommonConstants.POST_ARM_SERVICE_DEFINITION + " service:");
     	final ServiceQueryFormDTO serviceQueryForm = new ServiceQueryFormDTO.Builder(LineCommonConstants.POST_ARM_SERVICE_DEFINITION)
     																		.interfaces(getInterface())
@@ -208,6 +209,7 @@ public class TrayConsumerMain implements ApplicationRunner {
 			final ArmResponseDTO armResponse = arrowheadService.consumeServiceHTTP(ArmResponseDTO.class, HttpMethod.valueOf(orchestrationResult.getMetadata().get(LineCommonConstants.HTTP_METHOD)),
 					orchestrationResult.getProvider().getAddress(), orchestrationResult.getProvider().getPort(), orchestrationResult.getServiceUri(),
 					getInterface(), token, armRequest, new String[0]);
+			System.out.println("Time to send and get the data : "+(System.currentTimeMillis()-timer)+" ms");
 			logger.info("Provider (Arm) response : ");
 			printOut(armResponse);
 			
