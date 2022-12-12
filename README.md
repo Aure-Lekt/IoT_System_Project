@@ -30,7 +30,10 @@ This is the "lower" version version (rated for grade of 3). It will be presented
 
 
 
-## How to use (a,b,c are alternative methods, you only need to do one of them)
+## How to use 
+
+a,b,c are alternative methods, you only need to do one of them.
+
 - 1 : Clone the repo, or download and unzip somewhere on a folder on your computer.
 - 
 - 2 : Open terminal in the folder and execute "mvn clean install"
