@@ -52,6 +52,7 @@ public class RoboticArmConsumer {
 	}
 	
 	private sensorBoolSequence getSensorOrchestrationAndConsumption(String serviceDef) {
+		long timer = System.currentTimeMillis();
 		logger.info("Orchestration request for " + serviceDef + " service:");
     	final ServiceQueryFormDTO serviceQueryForm = new ServiceQueryFormDTO.Builder(serviceDef)
     																		.interfaces(getInterface())
@@ -86,6 +87,7 @@ public class RoboticArmConsumer {
 			final SensorResponseDTO sensorDto = arrowheadService.consumeServiceHTTP(SensorResponseDTO.class, HttpMethod.valueOf(orchestrationResult.getMetadata().get(LineCommonConstants.HTTP_METHOD)),
 																					orchestrationResult.getProvider().getAddress(), orchestrationResult.getProvider().getPort(), orchestrationResult.getServiceUri(),
 																					getInterface(), token, null, new String[0]);
+			System.out.println("Time to get the data : "+(System.currentTimeMillis()-timer)+" ms");
 			logger.info("Response : ");
 			printOut(sensorDto);
 			return sensorBoolSequence.getFromSuccess(sensorDto);
